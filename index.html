@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Pacifico&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="hearts-container"></div>
+
+    <div class="container" id="mainContainer">
+        <h1 class="title">Will you be my Valentine?</h1>
+        <div class="gif-container">
+            <img src="valentine_ask.png" alt="Cute bear asking" class="main-gif" id="mainGif">
+        </div>
+        <div class="buttons">
+            <button class="yes-btn" onclick="acceptProposal()">Yes</button>
+            <button class="no-btn" id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">
+                <span class="face">
+                    <span class="eye left"></span>
+                    <span class="eye right"></span>
+                    <span class="mouth"></span>
+                </span>
+                No
+            </button>
+        </div>
+    </div>
+
+    <div class="container hidden" id="successContainer">
+        <h1 class="title">Yay! I knew it! ❤️</h1>
+        <div class="gif-container">
+            <img src="valentine_success.png" alt="Celebration" class="success-gif">
+        </div>
+        <p class="message">See you on date</p>
+    </div>
+
+    <div class="crash-container hidden" id="crashContainer">
+        <div class="bsod-face" title="Try fixing me?">💔</div>
+        <h1>My heart ran into a problem and needs to restart.</h1>
+        <p>(Click or tap the broken heart to fix it)</p>
+        <p>The system detected an unexpected input: "YES".</p>
+        <p>We are just collecting some error info.</p>
+        <br>
+        <p class="error-code">Stop code: UNEXPECTED_LOVE_EXCEPTION</p>
+        <p class="error-details">System logic: User usually clicks NO. YES input caused buffer overflow of happiness.
+        </p>
+        <div class="progress">0% complete</div>
+
+        <div class="recovery-options hidden" id="recoveryOptions">
+            <p>System recovery options found:</p>
+            <button class="fix-btn" onclick="fixSystem()">> Repair Heart and Reboot</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

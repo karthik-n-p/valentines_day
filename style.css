@@ -1,0 +1,428 @@
+:root {
+    --bg-color: #ffe6eb;
+    --primary-color: #ff4d6d;
+    --secondary-color: #ff8fa3;
+    --text-color: #590d22;
+    --button-yes: #2ecc71;
+    --button-no: #e74c3c;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Indie Flower', cursive;
+    background-color: var(--bg-color);
+    overflow: hidden;
+    /* Prevent scrollbars when button moves */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.hearts-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.heart {
+    position: absolute;
+    top: -10px;
+    font-size: 20px;
+    color: var(--primary-color);
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(105vh);
+    }
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    z-index: 10;
+    max-width: 90%;
+    width: 400px;
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.hidden {
+    display: none;
+}
+
+.title {
+    font-family: 'Pacifico', cursive;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.gif-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.gif-container img:hover {
+    animation: wiggle 0.5s ease-in-out infinite;
+    box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
+    /* Glow effect */
+}
+
+@keyframes wiggle {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    25% {
+        transform: rotate(5deg) scale(1.05);
+    }
+
+    50% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    75% {
+        transform: rotate(-5deg) scale(1.05);
+    }
+
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    /* Distinct separation */
+    flex-wrap: wrap;
+    /* Allow wrapping on very small screens */
+    position: relative;
+    min-height: 60px;
+    /* Space for buttons */
+}
+
+button {
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.5rem;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.yes-btn {
+    background-color: var(--button-yes);
+    color: white;
+}
+
+.yes-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Character "No" Button */
+.no-btn {
+    background-color: var(--button-no);
+    color: white;
+    position: relative;
+    /* Allows movement */
+    min-width: 120px;
+    /* Allow growing */
+    height: auto;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    /* Ensure it stays on top */
+}
+
+/* Face of the "No" button character */
+/* Face of the "No" button character */
+.face {
+    display: flex;
+    /* Use flexbox for layout */
+    width: auto;
+    height: auto;
+    position: relative;
+    margin-right: 8px;
+    gap: 6px;
+    /* Space between eyes */
+    align-items: center;
+    /* Center eyes vertically */
+}
+
+.eye {
+    width: 14px;
+    /* Even bigger eyes */
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+    /* Relative for pupil */
+    flex-shrink: 0;
+    /* Prevent squishing */
+}
+
+.eye.left,
+.eye.right {
+    /* No special positioning needed with flex gap */
+    left: auto;
+    right: auto;
+}
+
+.eye::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Center pupil */
+}
+
+.mouth {
+    width: 12px;
+    height: 6px;
+    border-bottom: 2px solid white;
+    border-radius: 0 0 10px 10px;
+    position: absolute;
+    bottom: 0;
+}
+
+/* Fear expression when moving */
+.no-btn.scared .mouth {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+    border-top: 2px solid white;
+    /* Open mouth */
+    bottom: -2px;
+    background: #333;
+}
+
+.no-btn.scared .eye {
+    height: 10px;
+    width: 10px;
+}
+
+/* Crying expression */
+.no-btn.crying .mouth {
+    width: 12px;
+    height: 6px;
+    border-radius: 50%;
+    border-top: 2px solid white;
+    border-bottom: none;
+    /* Sad mouth curve down */
+    bottom: 2px;
+}
+
+.no-btn.crying .face::before,
+.no-btn.crying .face::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 6px;
+    background: #00a8ff;
+    /* Tear color */
+    border-radius: 0 50% 50% 50%;
+    top: 10px;
+    opacity: 0;
+    animation: cry 0.6s infinite;
+}
+
+.no-btn.crying .face::before {
+    left: -2px;
+    /* Outside left eye */
+    top: 15px;
+    transform: rotate(45deg);
+}
+
+.no-btn.crying .face::after {
+    right: -2px;
+    /* Outside right eye */
+    top: 15px;
+    transform: rotate(45deg);
+    animation-delay: 0.3s;
+}
+
+@keyframes cry {
+    0% {
+        transform: translateY(0) rotate(45deg) scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(10px) rotate(45deg) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Crash Screen (BSOD) */
+.crash-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0078d7;
+    /* BSOD Blue */
+    color: white;
+    font-family: 'Share Tech Mono', monospace;
+    padding: 5vmin;
+    /* Reduced padding */
+    /* Responsive padding */
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Center vertically specifically for modern look */
+    align-items: flex-start;
+    text-align: left;
+    box-sizing: border-box;
+    overflow-y: auto;
+    /* Allow scrolling if content is too tall */
+}
+
+.crash-container.hidden {
+    display: none;
+}
+
+.bsod-face {
+    font-size: 120px;
+    /* Slightly smaller */
+    margin-bottom: 30px;
+}
+
+.crash-container h1 {
+    font-size: 32px;
+    font-weight: normal;
+    margin-bottom: 30px;
+    line-height: 1.4;
+}
+
+.crash-container p {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.error-code {
+    margin-top: 30px;
+    font-size: 16px;
+}
+
+.error-details {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+.progress {
+    margin-top: 40px;
+    font-size: 24px;
+}
+
+/* Hide hearts when crashed */
+body.crashed .hearts-container {
+    display: none;
+}
+
+.recovery-options {
+    margin-top: 50px;
+}
+
+.recovery-options.hidden {
+    display: none;
+}
+
+.fix-btn {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.fix-btn:hover {
+    background: white;
+    color: #0078d7;
+}
+
+.bsod-face {
+    font-size: 150px;
+    margin-bottom: 50px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    user-select: none;
+}
+
+.bsod-face:hover {
+    transform: scale(1.1);
+}
+
+.bsod-face:active {
+    transform: scale(0.95);
+}
+
+/* Mobile adjustments for BSOD */
+@media (max-width: 600px) {
+    .crash-container {
+        padding: 40px 20px;
+    }
+
+    .bsod-face {
+        font-size: 100px;
+        margin-bottom: 30px;
+    }
+
+    .crash-container h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .crash-container p,
+    .error-details,
+    .error-code {
+        font-size: 14px;
+    }
+
+    .progress {
+        font-size: 18px;
+    }
+}
