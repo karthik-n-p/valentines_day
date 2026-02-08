@@ -184,11 +184,6 @@ window.addEventListener('pointermove', (e) => {
     setTargetFromClientXY(e.clientX, e.clientY);
 }, { passive: true });
 
-window.addEventListener('pointerdown', (e) => {
-    if (!running) return;
-    spawnBurstAt(e.clientX, e.clientY);
-}, { passive: true });
-
 window.addEventListener('pointerleave', () => {
     targetPX = 0;
     targetPY = 0;

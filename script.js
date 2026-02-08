@@ -141,37 +141,6 @@ window.addEventListener('pointermove', (e) => {
     rainPointerY = e.clientY;
 }, { passive: true });
 
-window.addEventListener('pointerdown', (e) => {
-    const container = document.querySelector('.hearts-container');
-    if (!container) return;
-
-    const hearts = Array.from(container.querySelectorAll('.heart'));
-    if (hearts.length === 0) return;
-
-    let best = null;
-    let bestD2 = Infinity;
-    const radius = 80;
-    const r2 = radius * radius;
-
-    for (const h of hearts) {
-        const rect = h.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        const dx = cx - e.clientX;
-        const dy = cy - e.clientY;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < bestD2) {
-            bestD2 = d2;
-            best = h;
-        }
-    }
-
-    if (best && bestD2 <= r2) {
-        best.classList.add('pop');
-        setTimeout(() => best.remove(), 240);
-    }
-}, { passive: true });
-
 function tickLoveRainInteraction() {
     const container = document.querySelector('.hearts-container');
     if (container) {
