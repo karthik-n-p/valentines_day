@@ -1,5 +1,30 @@
 const MAX_HEARTS = 30;
 
+let heartRainIntervalId = null;
+
+function startHeartRain(ms) {
+    if (heartRainIntervalId) {
+        clearInterval(heartRainIntervalId);
+        heartRainIntervalId = null;
+    }
+
+    const container = document.querySelector('.hearts-container');
+    if (container) {
+        const hearts = container.querySelectorAll('.heart');
+        if (hearts.length > MAX_HEARTS) {
+            for (let i = 0; i < hearts.length - MAX_HEARTS; i++) hearts[i].remove();
+        }
+    }
+
+    heartRainIntervalId = setInterval(createHeart, ms);
+}
+
+function stopHeartRain() {
+    if (!heartRainIntervalId) return;
+    clearInterval(heartRainIntervalId);
+    heartRainIntervalId = null;
+}
+
 function createHeart() {
     const container = document.querySelector('.hearts-container');
     if (!container) return;
@@ -20,7 +45,7 @@ function createHeart() {
     }, 5200);
 }
 
-setInterval(createHeart, 300);
+startHeartRain(300);
 
 function setupTeddyReactions() {
     const mainContainer = document.getElementById('mainContainer');
@@ -271,6 +296,8 @@ function changeMind() {
     if (main) main.classList.remove('hidden');
 
     resetNoButton();
+
+    startHeartRain(300);
 }
 
 function moveButton(e) {
@@ -372,6 +399,7 @@ function acceptProposal() {
 
     // Show Crash Screen
     document.body.classList.add('crashed'); // Hide hearts
+    stopHeartRain();
     const crashScreen = document.getElementById('crashContainer');
     crashScreen.classList.remove('hidden');
 
@@ -424,5 +452,5 @@ function fixSystem() {
     document.getElementById('successContainer').classList.remove('hidden');
 
     // Intensify hearts
-    setInterval(createHeart, 100);
+    startHeartRain(100);
 }
