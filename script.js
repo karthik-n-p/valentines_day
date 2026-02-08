@@ -1,26 +1,292 @@
+const MAX_HEARTS = 30;
+
 function createHeart() {
+    const container = document.querySelector('.hearts-container');
+    if (!container) return;
+
+    const currentHearts = container.querySelectorAll('.heart').length;
+    if (currentHearts >= MAX_HEARTS) return;
+
     const heart = document.createElement('div');
     heart.classList.add('heart');
     heart.innerHTML = '❤️';
     heart.style.left = Math.random() * 100 + 'vw';
     heart.style.animationDuration = Math.random() * 2 + 3 + 's'; // 3-5 seconds
 
-    document.querySelector('.hearts-container').appendChild(heart);
+    container.appendChild(heart);
 
     setTimeout(() => {
         heart.remove();
-    }, 5000);
+    }, 5200);
 }
 
 setInterval(createHeart, 300);
 
+function setupTeddyReactions() {
+    const mainContainer = document.getElementById('mainContainer');
+    const successContainer = document.getElementById('successContainer');
+    const containers = [mainContainer, successContainer].filter(Boolean);
+
+    for (const container of containers) {
+        const teddy = container.querySelector('.teddy');
+        if (!teddy) continue;
+
+        const setLook = (clientX, clientY) => {
+            const rect = teddy.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (clientX - cx) / 90;
+            const dy = (clientY - cy) / 90;
+            const lookX = Math.max(-1, Math.min(1, dx));
+            const lookY = Math.max(-1, Math.min(1, dy));
+            teddy.style.setProperty('--look-x', lookX);
+            teddy.style.setProperty('--look-y', lookY);
+        };
+
+        container.addEventListener('pointermove', (e) => {
+            if (container.classList.contains('hidden')) return;
+            setLook(e.clientX, e.clientY);
+        }, { passive: true });
+
+        container.addEventListener('pointerleave', () => {
+            teddy.style.setProperty('--look-x', 0);
+            teddy.style.setProperty('--look-y', 0);
+        }, { passive: true });
+    }
+}
+
+setupTeddyReactions();
+
+function setupYesAttentionNearNo() {
+    const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    const yesBtn = document.querySelector('.yes-btn');
+    const noBtn = document.getElementById('noBtn');
+    if (!yesBtn || !noBtn) return;
+
+    let lastX = window.innerWidth * 0.5;
+    let lastY = window.innerHeight * 0.5;
+    let raf = 0;
+    let active = false;
+
+    const setActive = (next) => {
+        if (active === next) return;
+        active = next;
+        yesBtn.classList.toggle('attention', active);
+
+        const mainTeddy = document.querySelector('#mainContainer .teddy');
+        if (mainTeddy) mainTeddy.classList.toggle('happy', active);
+    };
+
+    const tick = () => {
+        raf = 0;
+        if (document.body.classList.contains('crashed')) {
+            setActive(false);
+            return;
+        }
+
+        const rect = noBtn.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = cx - lastX;
+        const dy = cy - lastY;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        setActive(d < 160);
+    };
+
+    window.addEventListener('pointermove', (e) => {
+        lastX = e.clientX;
+        lastY = e.clientY;
+        if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+
+    window.addEventListener('pointerleave', () => {
+        setActive(false);
+    }, { passive: true });
+}
+
+setupYesAttentionNearNo();
+
+let rainPointerX = window.innerWidth * 0.5;
+let rainPointerY = window.innerHeight * 0.5;
+
+window.addEventListener('pointermove', (e) => {
+    rainPointerX = e.clientX;
+    rainPointerY = e.clientY;
+}, { passive: true });
+
+window.addEventListener('pointerdown', (e) => {
+    const container = document.querySelector('.hearts-container');
+    if (!container) return;
+
+    const hearts = Array.from(container.querySelectorAll('.heart'));
+    if (hearts.length === 0) return;
+
+    let best = null;
+    let bestD2 = Infinity;
+    const radius = 80;
+    const r2 = radius * radius;
+
+    for (const h of hearts) {
+        const rect = h.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = cx - e.clientX;
+        const dy = cy - e.clientY;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < bestD2) {
+            bestD2 = d2;
+            best = h;
+        }
+    }
+
+    if (best && bestD2 <= r2) {
+        best.classList.add('pop');
+        setTimeout(() => best.remove(), 240);
+    }
+}, { passive: true });
+
+function tickLoveRainInteraction() {
+    const container = document.querySelector('.hearts-container');
+    if (container) {
+        const hearts = container.querySelectorAll('.heart');
+        const influenceRadius = 160;
+        const ir2 = influenceRadius * influenceRadius;
+
+        for (const h of hearts) {
+            if (h.classList.contains('pop')) continue;
+
+            const rect = h.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = cx - rainPointerX;
+            const dy = cy - rainPointerY;
+            const d2 = dx * dx + dy * dy;
+
+            if (d2 < ir2) {
+                const strength = 1 - d2 / ir2;
+                const repel = strength * 18;
+                const len = Math.max(1, Math.sqrt(d2));
+                const ox = (dx / len) * repel;
+                const oy = (dy / len) * repel;
+                h.style.transform = `translate3d(${ox}px, ${oy}px, 0)`;
+            } else {
+                h.style.transform = 'translate3d(0px, 0px, 0)';
+            }
+        }
+    }
+
+    requestAnimationFrame(tickLoveRainInteraction);
+}
+
+requestAnimationFrame(tickLoveRainInteraction);
+
+const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (!prefersReducedMotion) {
+    const containers = [];
+    const mainContainer = document.getElementById('mainContainer');
+    const successContainer = document.getElementById('successContainer');
+    if (mainContainer) containers.push(mainContainer);
+    if (successContainer) containers.push(successContainer);
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+
+    function updateTarget(clientX, clientY) {
+        const x = (clientX / window.innerWidth) * 2 - 1;
+        const y = (clientY / window.innerHeight) * 2 - 1;
+        targetX = Math.max(-1, Math.min(1, x));
+        targetY = Math.max(-1, Math.min(1, y));
+    }
+
+    window.addEventListener('pointermove', (e) => {
+        updateTarget(e.clientX, e.clientY);
+    }, { passive: true });
+
+    window.addEventListener('pointerleave', () => {
+        targetX = 0;
+        targetY = 0;
+    }, { passive: true });
+
+    function tick() {
+        currentX += (targetX - currentX) * 0.08;
+        currentY += (targetY - currentY) * 0.08;
+
+        const translateX = currentX * 10;
+        const translateY = currentY * 8;
+        const rotateY = currentX * 2.2;
+        const rotateX = -currentY * 2.0;
+
+        for (const el of containers) {
+            if (el.classList.contains('hidden')) continue;
+            el.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+}
+
 let noBtnState = 0; // 0: initial, 1+: moved
+
+function showChangeMind() {
+    const prompt = document.getElementById('changeMindPrompt');
+    if (prompt) prompt.classList.remove('hidden');
+}
+
+function hideChangeMind() {
+    const prompt = document.getElementById('changeMindPrompt');
+    if (prompt) prompt.classList.add('hidden');
+}
+
+function resetNoButton() {
+    const noBtn = document.getElementById('noBtn');
+    if (!noBtn) return;
+
+    noBtn.classList.remove('crying');
+    noBtn.classList.remove('scared');
+    noBtn.style.position = '';
+    noBtn.style.left = '';
+    noBtn.style.top = '';
+
+    const textNode = Array.from(noBtn.childNodes).find(n => n.nodeType === 3 && n.textContent.trim().length > 0);
+    if (textNode) {
+        textNode.textContent = ' No';
+    }
+
+    noBtnState = 0;
+}
+
+function changeMind() {
+    hideChangeMind();
+
+    const success = document.getElementById('successContainer');
+    const main = document.getElementById('mainContainer');
+    if (success) success.classList.add('hidden');
+    if (main) main.classList.remove('hidden');
+
+    resetNoButton();
+}
 
 function moveButton(e) {
     if (e && e.type === 'touchstart') e.preventDefault();
 
     const noBtn = document.getElementById('noBtn');
     const container = document.querySelector('.container');
+
+    const teddy = document.querySelector('#mainContainer .teddy');
+    if (teddy) {
+        teddy.classList.add('crying');
+        clearTimeout(teddy._cryTimeout);
+        teddy._cryTimeout = setTimeout(() => {
+            teddy.classList.remove('crying');
+        }, 1200);
+    }
 
     // Add crying expression
     noBtn.classList.add('crying');
@@ -53,7 +319,7 @@ function moveButton(e) {
     const winWidth = window.innerWidth;
     const winHeight = window.innerHeight;
 
-    const padding = 20; // Safety buffer
+    const padding = Math.max(12, Math.floor(Math.min(winWidth, winHeight) * 0.04)); // Safety buffer
 
     // Calculate max allowed position
     let maxX = winWidth - btnWidth - padding;
@@ -70,7 +336,7 @@ function moveButton(e) {
     let currentY = noBtn.offsetTop;
 
     // Limit movement distance (radius)
-    const moveRange = 200; // Move up to 200px from current spot
+    const moveRange = Math.min(200, Math.floor(Math.min(winWidth, winHeight) * 0.25)); // Responsive move range
 
     // Random offset between -moveRange and +moveRange
     let deltaX = (Math.random() - 0.5) * 2 * moveRange;
@@ -112,11 +378,13 @@ function acceptProposal() {
     // Simulate BSOD progress
     let progress = 0;
     const progressEl = document.querySelector('.progress');
+    const progressBarEl = document.getElementById('crashProgressBar');
 
     const interval = setInterval(() => {
         progress += Math.floor(Math.random() * 10) + 1;
         if (progress > 100) progress = 100;
         progressEl.textContent = progress + '% complete';
+        if (progressBarEl) progressBarEl.style.width = progress + '%';
 
         if (progress === 100) {
             clearInterval(interval);
@@ -138,6 +406,7 @@ function acceptProposal() {
 
             // Update progress text
             document.querySelector('.progress').textContent = 'Manual override detected...';
+            if (progressBarEl) progressBarEl.style.width = '100%';
 
             setTimeout(() => {
                 fixSystem();

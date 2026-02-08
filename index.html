@@ -12,13 +12,59 @@
 </head>
 
 <body>
+    <canvas id="bg-canvas" aria-hidden="true"></canvas>
     <div class="hearts-container"></div>
 
     <div class="container" id="mainContainer">
+        <div class="teddy" aria-hidden="true">
+            <svg class="teddy-svg" viewBox="0 0 120 120" width="60" height="60">
+                <defs>
+                    <radialGradient id="teddyFace" cx="35%" cy="30%" r="75%">
+                        <stop offset="0%" stop-color="#f6d6b1" />
+                        <stop offset="65%" stop-color="#d8a877" />
+                        <stop offset="100%" stop-color="#b98557" />
+                    </radialGradient>
+                    <radialGradient id="teddyMuzzle" cx="40%" cy="35%" r="70%">
+                        <stop offset="0%" stop-color="#ffe8d2" />
+                        <stop offset="100%" stop-color="#f1cfa8" />
+                    </radialGradient>
+                </defs>
+
+                <g class="teddy-float">
+                    <circle cx="28" cy="34" r="18" fill="#b98557" opacity="0.95" />
+                    <circle cx="92" cy="34" r="18" fill="#b98557" opacity="0.95" />
+                    <circle cx="28" cy="34" r="9" fill="#f1cfa8" opacity="0.95" />
+                    <circle cx="92" cy="34" r="9" fill="#f1cfa8" opacity="0.95" />
+
+                    <circle cx="60" cy="62" r="44" fill="url(#teddyFace)" />
+                    <ellipse cx="60" cy="77" rx="26" ry="20" fill="url(#teddyMuzzle)" />
+
+                    <g class="teddy-eyes">
+                        <ellipse class="teddy-eye" cx="44" cy="58" rx="6" ry="7" fill="#2b1b14" />
+                        <ellipse class="teddy-eye" cx="76" cy="58" rx="6" ry="7" fill="#2b1b14" />
+                        <circle cx="42" cy="55" r="2" fill="#ffffff" opacity="0.75" />
+                        <circle cx="74" cy="55" r="2" fill="#ffffff" opacity="0.75" />
+                    </g>
+
+                    <path d="M60 70c-4 0-7-3-7-7 0-4 3-7 7-7 4 0 7 3 7 7 0 4-3 7-7 7z" fill="#3a231b" opacity="0.95" />
+
+                    <g class="teddy-mouth">
+                        <path class="teddy-smile" d="M50 80c4 6 16 6 20 0" fill="none" stroke="#3a231b" stroke-width="3.5" stroke-linecap="round" />
+                        <path class="teddy-sad" d="M50 86c4-6 16-6 20 0" fill="none" stroke="#3a231b" stroke-width="3.5" stroke-linecap="round" opacity="0" />
+                    </g>
+
+                    <g class="teddy-tears" opacity="0">
+                        <path class="teddy-tear" d="M36 70c0 0-5 8 0 12c5-4 0-12 0-12z" fill="#4fc3ff" opacity="0.85" />
+                        <path class="teddy-tear" d="M84 70c0 0-5 8 0 12c5-4 0-12 0-12z" fill="#4fc3ff" opacity="0.85" />
+                    </g>
+                </g>
+            </svg>
+        </div>
         <h1 class="title">Will you be my Valentine?</h1>
         <div class="gif-container">
             <img src="valentine_ask.png" alt="Cute bear asking" class="main-gif" id="mainGif">
         </div>
+
         <div class="buttons">
             <button class="yes-btn" onclick="acceptProposal()">Yes</button>
             <button class="no-btn" id="noBtn" onmouseover="moveButton()" ontouchstart="moveButton()">
@@ -33,32 +79,101 @@
     </div>
 
     <div class="container hidden" id="successContainer">
+        <div class="teddy" aria-hidden="true">
+            <svg class="teddy-svg" viewBox="0 0 120 120" width="60" height="60">
+                <defs>
+                    <radialGradient id="teddyFace2" cx="35%" cy="30%" r="75%">
+                        <stop offset="0%" stop-color="#f6d6b1" />
+                        <stop offset="65%" stop-color="#d8a877" />
+                        <stop offset="100%" stop-color="#b98557" />
+                    </radialGradient>
+                    <radialGradient id="teddyMuzzle2" cx="40%" cy="35%" r="70%">
+                        <stop offset="0%" stop-color="#ffe8d2" />
+                        <stop offset="100%" stop-color="#f1cfa8" />
+                    </radialGradient>
+                </defs>
+
+                <g class="teddy-float">
+                    <circle cx="28" cy="34" r="18" fill="#b98557" opacity="0.95" />
+                    <circle cx="92" cy="34" r="18" fill="#b98557" opacity="0.95" />
+                    <circle cx="28" cy="34" r="9" fill="#f1cfa8" opacity="0.95" />
+                    <circle cx="92" cy="34" r="9" fill="#f1cfa8" opacity="0.95" />
+
+                    <circle cx="60" cy="62" r="44" fill="url(#teddyFace2)" />
+                    <ellipse cx="60" cy="77" rx="26" ry="20" fill="url(#teddyMuzzle2)" />
+
+                    <g class="teddy-eyes">
+                        <ellipse class="teddy-eye" cx="44" cy="58" rx="6" ry="7" fill="#2b1b14" />
+                        <ellipse class="teddy-eye" cx="76" cy="58" rx="6" ry="7" fill="#2b1b14" />
+                        <circle cx="42" cy="55" r="2" fill="#ffffff" opacity="0.75" />
+                        <circle cx="74" cy="55" r="2" fill="#ffffff" opacity="0.75" />
+                    </g>
+
+                    <path d="M60 70c-4 0-7-3-7-7 0-4 3-7 7-7 4 0 7 3 7 7 0 4-3 7-7 7z" fill="#3a231b" opacity="0.95" />
+
+                    <g class="teddy-mouth">
+                        <path class="teddy-smile" d="M50 80c4 6 16 6 20 0" fill="none" stroke="#3a231b" stroke-width="3.5" stroke-linecap="round" />
+                        <path class="teddy-sad" d="M50 86c4-6 16-6 20 0" fill="none" stroke="#3a231b" stroke-width="3.5" stroke-linecap="round" opacity="0" />
+                    </g>
+
+                    <g class="teddy-tears" opacity="0">
+                        <path class="teddy-tear" d="M36 70c0 0-5 8 0 12c5-4 0-12 0-12z" fill="#4fc3ff" opacity="0.85" />
+                        <path class="teddy-tear" d="M84 70c0 0-5 8 0 12c5-4 0-12 0-12z" fill="#4fc3ff" opacity="0.85" />
+                    </g>
+                </g>
+            </svg>
+        </div>
         <h1 class="title">Yay! I knew it! ❤️</h1>
         <div class="gif-container">
             <img src="valentine_success.png" alt="Celebration" class="success-gif">
         </div>
+
         <p class="message">See you on date</p>
+
+        <div class="success-actions">
+            <button class="change-mind-btn" id="showChangeMindBtn" onclick="showChangeMind()">Change mind</button>
+
+            <div class="change-mind-prompt hidden" id="changeMindPrompt">
+                <p class="change-mind-text">Want to go back?</p>
+                <div class="change-mind-buttons">
+                    <button class="change-mind-confirm" onclick="changeMind()">Change mind</button>
+                    <button class="change-mind-cancel" onclick="hideChangeMind()">No</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="crash-container hidden" id="crashContainer">
-        <div class="bsod-face" title="Try fixing me?">💔</div>
-        <h1>My heart ran into a problem and needs to restart.</h1>
-        <p>(Click or tap the broken heart to fix it)</p>
-        <p>The system detected an unexpected input: "YES".</p>
-        <p>We are just collecting some error info.</p>
-        <br>
-        <p class="error-code">Stop code: UNEXPECTED_LOVE_EXCEPTION</p>
-        <p class="error-details">System logic: User usually clicks NO. YES input caused buffer overflow of happiness.
-        </p>
-        <div class="progress">0% complete</div>
+        <div class="crash-panel">
+            <div class="crash-header">
+                <div class="bsod-face" title="Try fixing me?">💔</div>
+                <div class="crash-titles">
+                    <h1>My heart ran into a problem and needs to restart.</h1>
+                    <p class="crash-hint">(Click or tap the broken heart to fix it)</p>
+                </div>
+            </div>
 
-        <div class="recovery-options hidden" id="recoveryOptions">
-            <p>System recovery options found:</p>
-            <button class="fix-btn" onclick="fixSystem()">> Repair Heart and Reboot</button>
+            <div class="crash-body">
+                <div class="crash-meta">
+                    <p class="error-code">UNEXPECTED YES EXCEPTION</p>
+                    <p class="error-details">Unexpected input: "YES". System overflowed with happiness.</p>
+                </div>
+
+                <div class="crash-progress" aria-hidden="true">
+                    <div class="crash-progress__bar" id="crashProgressBar"></div>
+                </div>
+                <div class="progress">0% complete</div>
+
+                <div class="recovery-options hidden" id="recoveryOptions">
+                    <p>Recovery option:</p>
+                    <button class="fix-btn" onclick="fixSystem()">Repair Heart and Reboot</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
+    <script type="module" src="three-bg.js"></script>
 </body>
 
 </html>
